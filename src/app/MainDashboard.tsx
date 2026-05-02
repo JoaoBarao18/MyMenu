@@ -1,90 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import { supabase } from '../supabaseClient'; // Ajusta o caminho se necessário
-import { LogOut, User, Mail, Calendar } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+// pages/DashboardPage.tsx
+import React from 'react';
+import MenuButton from './components/MenuButton/MenuButton';
+import ProfileDropdown from './components/ProfileDropdown';
 
-const MainDashboard = () => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+// Supomos que tens estas imagens na tua pasta de imports
+import ReceitasImg from '../imports/receitas.png';
+import IngredientesImg from '../imports/ingredientes.png';
+import IdeiasImg from '../imports/ideias.png';
+import GeoguessImg from '../imports/geoguess.png';
 
-  useEffect(() => {
-    // Buscar os dados do utilizador atual
-    const getUserData = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUserData();
-  }, []);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    toast.info("Logged out successfully.");
-    navigate('/login');
+export default function DashboardPage() {
+  const handleMenuClick = (menuLabel: string) => {
+    // Lógica para navegação baseada no botão clicado
+    console.log(`Navegar para: ${menuLabel}`);
+    // Exemplo: navigate('/receitas');
   };
 
-  if (!user) return <div className="p-8">Loading..</div>;
-
   return (
-    <div className="min-h-screen bg-[#fffcf5] p-6 font-sans">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8 bg-white p-4 rounded-2xl shadow-sm border border-[#eee8d5]">
-        <div>
-          <h1 className="text-2xl font-bold text-[#4c1f03]">MyMenu Dashboard</h1>
-          <p className="text-gray-500 text-sm">Bem-vindo de volta!</p>
-        </div>
-        <button 
-          onClick={handleLogout}
-          className="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-xl hover:bg-red-100 transition-colors"
-        >
-          <LogOut size={18} />
-          <span>Sair</span>
-        </button>
-      </div>
+    // Fundo bege claro, padding para o ecrã mobile
+    <div className="bg-[#fdfcf5] min-h-[100dvh] w-full p-6 md:p-10 relative">
+      
+      {/* Header com o Perfil Dropdown (Canto Superior Direito) */}
+      <header className="w-full flex justify-end mb-12">
+        <ProfileDropdown />
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Card de Perfil */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-[#eee8d5]">
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <User size={20} className="text-[#4c1f03]" /> 
-            Informações da Conta
-          </h2>
-          
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3 bg-[#fffcf5] rounded-xl">
-              <Mail className="text-gray-400" size={18} />
-              <div>
-                <p className="text-xs text-gray-400 uppercase font-bold">Email</p>
-                <p className="text-[#4c1f03] font-medium">{user.email}</p>
-              </div>
-            </div>
+      {/* Grid Centralizado para os Botões */}
+      <main className="w-full max-w-2xl mx-auto flex flex-col items-center">
+        
+        <MenuButton 
+          label="Receitas" 
+          imageSrc={ReceitasImg} 
+          onClick={() => handleMenuClick("Receitas")}
+        />
 
-            <div className="flex items-center gap-3 p-3 bg-[#fffcf5] rounded-xl">
-              <Calendar className="text-gray-400" size={18} />
-              <div>
-                <p className="text-xs text-gray-400 uppercase font-bold">Membro desde</p>
-                <p className="text-[#4c1f03] font-medium">
-                  {new Date(user.created_at).toLocaleDateString('pt-PT')}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <MenuButton 
+          label="Meus ingredientes" 
+          imageSrc={IngredientesImg} 
+          onClick={() => handleMenuClick("Meus ingredientes")}
+        />
 
-        {/* Card de Boas-vindas */}
-        <div className="bg-[#4c1f03] p-6 rounded-3xl shadow-lg text-white flex flex-col justify-center">
-          <h3 className="text-xl font-bold mb-2">Olá, {user.user_metadata?.full_name || 'Utilizador'}!</h3>
-          <p className="text-orange-100 opacity-80">
-            O teu sistema de autenticação está a funcionar perfeitamente com o Supabase. 
-            Pronto para começar a criar receitas?
-          </p>
-          <button className="mt-6 bg-white text-[#4c1f03] font-bold py-3 rounded-2xl hover:bg-orange-50 transition-transform active:scale-95">
-            + Nova Receita
-          </button>
-        </div>
-      </div>
+        <MenuButton 
+          label="Descobrir ideias" 
+          imageSrc={IdeiasImg} 
+          onClick={() => handleMenuClick("Descobrir ideias")}
+        />
+
+        {/* O Geoguess na tua imagem tem o ícone à esquerda */}
+        <MenuButton 
+          label="Geoguess" 
+          imageSrc={GeoguessImg} 
+          iconFirst={true}
+          onClick={() => handleMenuClick("Geoguess")}
+        />
+
+      </main>
     </div>
   );
-};
-
-export default MainDashboard;
+}
