@@ -4,10 +4,10 @@ import MenuButton from './components/MenuButton/MenuButton';
 import ProfileDropdown from './components/ProfileDropdown';
 
 // Supomos que tens estas imagens na tua pasta de imports
-import ReceitasImg from '../imports/receitas.png';
-import IngredientesImg from '../imports/ingredientes.png';
-import IdeiasImg from '../imports/ideias.png';
-import GeoguessImg from '../imports/geoguess.png';
+import ReceitasImg from '../../public/images/receitas.png'; // Ajusta o caminho conforme necessário
+import IngredientesImg from '../../public/images/ingridientes.png';
+import IdeiasImg from '../../public/images/idea.png';
+import GeoguessImg from '../../public/images/globo.png';
 
 export default function DashboardPage() {
   const handleMenuClick = (menuLabel: string) => {
