@@ -21,7 +21,7 @@ export default function LoginPage() {
     });
 
     if (error) {
-      toast.error("Erro ao tentar entrar com o Google: " + error.message);
+      toast.error("Error trying to log in with Google: " + error.message);
     }
   };
 
@@ -29,7 +29,7 @@ export default function LoginPage() {
     e.preventDefault()
     
     if (!email || !password) {
-      toast.error("Por favor preencha todos os campos");
+      toast.error("Please fill in all fields");
       return;
     }
 
