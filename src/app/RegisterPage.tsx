@@ -18,7 +18,7 @@ export default function RegisterPage() {
       provider: 'google',
       options: {
         // Para ele voltar para a tua app depois de ir ao site do Google
-        redirectTo: 'http://localhost:5173/dashboard' 
+        redirectTo: 'http://localhost:5173/UserPreferences' 
       }
     });
 
@@ -55,7 +55,7 @@ export default function RegisterPage() {
       toast.success("Registo feito! Verifica o teu email para confirmar.");
       console.log("Utilizador registado:", data.user);
 
-      navigate("/login");
+      navigate("/UserPreferences");
     }
 
     setIsLoading(false);
