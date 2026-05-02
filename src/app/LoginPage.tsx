@@ -37,7 +37,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-[#fec356] relative min-h-screen w-full flex flex-col items-center justify-center p-4 md:p-8 to-[#fffbed]" data-name="iPhone 17 - 1">
+    <div className="bg-gradient-to-b from-[#fec356] relative h-[100dvh] overflow-hidden w-full flex flex-col items-center justify-center p-4 md:p-8 to-[#fffbed]" data-name="iPhone 17 - 1">
       
       {/* Imagem */}
       <div className="w-full flex items-center justify-center mb-6 md:mb-10">
