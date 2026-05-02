@@ -7,6 +7,7 @@ import MainDashboard from "./MainDashboard";
 import LoginPage from "./LoginPage"; 
 import RegistarPage from "./RegisterPage";
 import JoinPage from "./JoinPage";
+import UserPreferences from "./UserPreferences";
 
 
 function AuthHandler() {
@@ -50,6 +51,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistarPage />} />
           <Route path="/dashboard" element={<MainDashboard />} />
+          <Route path="/UserPreferences" element={<UserPreferences />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
