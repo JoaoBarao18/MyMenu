@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Mail, User, Lock } from "lucide-react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import LogoMyMenu from "../imports/IPhone171/LogoMyMenu.png"; // Certifica-te de que o caminho está correto
 import { supabase } from "../../supabaseClient";
@@ -8,6 +9,21 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleGoogleLogin = async () => {
+    // É importante usar um try/catch ou verificar o erro logo aqui
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        // Para ele voltar para a tua app depois de ir ao site do Google
+        redirectTo: 'http://localhost:5173/dashboard' 
+      }
+    });
+
+    if (error) {
+      toast.error("Erro ao tentar entrar com o Google: " + error.message);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -103,15 +119,16 @@ export default function LoginPage() {
         <div className="text-center mt-8 md:mt-12">
           <p className="font-['Quicksand',sans-serif] text-[#4c1f03] text-[16px] md:text-[18px]">
             Don't have an account?{" "}
-            <span className="font-bold underline cursor-pointer hover:text-[#f60]">
+            <Link 
+              to="/register" className="font-bold underline cursor-pointer hover:text-[#f60] transition-colors">
               Register
-            </span>
+            </Link>
           </p>
         </div>
 
         {/* Social Icons */}
         <div className="flex justify-center gap-4 md:gap-8 mt-6 md:mt-8">
-          <button className="size-12 md:size-14 rounded-full border-2 border-[#4c1f03] flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer">
+          <button type="button" onClick={handleGoogleLogin} className="size-12 md:size-14 rounded-full border-2 border-[#4c1f03] flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer">
             <svg className="size-6 md:size-7" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
