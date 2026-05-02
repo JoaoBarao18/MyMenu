@@ -1,20 +1,21 @@
 interface PreferencesFooterProps {
-  onSubmit: () => void;
+  isButtonDisabled: boolean;
 }
 
-export function PreferencesFooter({ onSubmit }: PreferencesFooterProps) {
+export function PreferencesFooter({ isButtonDisabled }: PreferencesFooterProps) {
   return (
-    <div className="p-4 border-t-2 border-[#4c1f03]/20 space-y-3 bg-white">
+    <div className="p-6 mt-auto border-t border-[#4c1f03]/10">
       <button
         type="submit"
-        onClick={onSubmit}
-        className="w-full bg-[#ff8d28] hover:bg-[#ff8d28]/90 text-white py-2.5 px-4 rounded-md transition-colors"
+        disabled={isButtonDisabled} // Propriedade nativa do HTML para desativar
+        className={`w-full py-4 rounded-full text-white font-bold text-lg transition-all
+          ${isButtonDisabled 
+            ? "bg-gray-400 cursor-not-allowed opacity-50" // Estilo quando bloqueado
+            : "bg-[#ff5c00] hover:bg-[#e65300] active:scale-95 shadow-lg" // Estilo quando ativo
+          }`}
       >
-        Salvar Informações
+        Submit
       </button>
-      <p className="text-xs text-[#4c1f03]/60 text-center">
-        Ao submeter, concorda com os nossos termos e condições
-      </p>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FormField } from "./components/UserPreferences/FormField";
 import { PreferencesHeader } from "./components/UserPreferences/PreferencesHeader";
 import { PreferencesFooter } from "./components/UserPreferences/PreferencesFooter";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const GENDER_OPTIONS = [
   { value: "masculino", label: "Masculino" },
@@ -18,6 +19,8 @@ const EXERCISE_OPTIONS = [
 ];
 
 export default function UserPreferences() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fullName: "",
     age:"",
@@ -29,9 +32,22 @@ export default function UserPreferences() {
     exerciseFrequency: ""
   });
 
+  const isFormValid =
+    formData.fullName.trim() !== "" &&
+    formData.age.trim() !== "" &&
+    formData.weight.trim() !== "" &&
+    formData.height.trim() !== "" &&
+    formData.nationality.trim() !== "" &&
+    formData.gender.trim() !== "" &&
+    formData.exerciseFrequency.trim() !== "";
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Saving user preferences:", formData);
+    
+    if(isFormValid){
+      console.log("Saving user preferences:", formData);
+      navigate("/dashboard");
+    }
   };
 
   const handleClose = () => {
@@ -121,7 +137,7 @@ export default function UserPreferences() {
             />
           </div>
 
-          <PreferencesFooter onSubmit={() => {}} />
+          <PreferencesFooter isButtonDisabled={!isFormValid} />
         </form>
       </div>
     </div>
