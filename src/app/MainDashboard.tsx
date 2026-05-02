@@ -29,8 +29,10 @@ const MainDashboard = () => {
 
   return (
     <div>
-      <NavSup />
-      <NavInf />
+      <NavSup>
+        
+      </NavSup>
+      <NavInf></NavInf>
     </div>
   );
 };

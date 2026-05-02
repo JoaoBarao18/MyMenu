@@ -1,5 +1,7 @@
 const NavInf = () => {
-    return <div></div>
+    return (
+        <div className="NavInf ">Navbar inferior</div>
+    );
 }
 
 export default NavInf;

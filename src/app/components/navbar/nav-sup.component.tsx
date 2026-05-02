@@ -1,5 +1,9 @@
+
+
 const NavSup = () => {
-    return <div></div>
+    return (
+        <div>Navbar superior</div>
+    );
 }
 
 export default NavSup;
