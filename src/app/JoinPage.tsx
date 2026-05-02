@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Mail, User, Lock } from "lucide-react";
 import { toast } from "sonner";
 import LogoMyMenu from "../imports/IPhone171/LogoMyMenu.png"; // Certifica-te de que o caminho está correto
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../supabaseClient";
 
 export default function JoinPage() {
   return (

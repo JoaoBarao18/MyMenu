@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
-import { supabase } from "../../supabaseClient"; // Garante que o caminho está certo
+import { supabase } from "../supabaseClient"; // Garante que o caminho está certo
 import MainDashboard from "./MainDashboard";
 // Teus componentes
 import LoginPage from "./LoginPage"; 

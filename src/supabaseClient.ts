@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 
 // Estas chaves encontras nas definições do teu projeto Supabase (Project Settings > API)
-const supabaseUrl = 'https://deenuyruuribuuldmzwu.supabase.co'
-const supabaseAnonKey = 'sb_publishable_WEYY7m1p7QQ5tm2V_7Efaw_VDhgyUzk'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)

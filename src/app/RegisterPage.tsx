@@ -3,7 +3,7 @@ import { Mail, User, Lock } from "lucide-react";
 import { Link,useNavigate} from "react-router-dom";
 import { toast } from "sonner";
 import LogoMyMenu from "../imports/IPhone171/LogoMyMenu.png";
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../supabaseClient";
 
 export default function RegisterPage() {
   const [fullName, setFullName] = useState("");

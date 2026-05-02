@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../supabaseClient'; // Ajusta o caminho se necessário
+import { supabase } from '../supabaseClient'; // Ajusta o caminho se necessário
 import { LogOut, User, Mail, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
