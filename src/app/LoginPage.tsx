@@ -26,10 +26,10 @@ export default function LoginPage() {
     });
 
     if (error) {
-      toast.error("Erro no login: " + error.message);
+      toast.error("Login Error: " + error.message);
     } else {
-      toast.success("Login bem sucedido!");
-      console.log("Utilizador:", data.user);
+      toast.success("Login Successful!");
+      console.log("User:", data.user);
       // Aqui podes redirecionar o utilizador se quiseres
     }
 
@@ -51,7 +51,7 @@ export default function LoginPage() {
       {/* Login Card (Cresce em largura e altura no Tablet) */}
       <div className="bg-white border-5 border-[#4c1f03] border-solid w-full max-w-[368px] md:max-w-[500px] min-h-[500px] md:min-h-[620px] rounded-[27px] p-8 md:p-12 relative shadow-xl flex flex-col justify-center">
         <h1 className="font-['Quicksand',sans-serif] font-bold leading-[normal] text-[#4c1f03] text-[36px] md:text-[42px] text-center mb-8 md:mb-12">
-          Iniciar Sessão
+          Log In
         </h1>
 
         {/* Formulário (Maior espaçamento vertical no Tablet) */}
@@ -93,7 +93,7 @@ export default function LoginPage() {
             >
               <span className="font-['Gruppo',sans-serif] leading-[normal] text-[32px] text-white">
                 {/* 2. Muda o texto conforme o estado */}
-                {isLoading ? "A entrar..." : "Iniciar"}
+                {isLoading ? "Joining..." : "Log In"}
               </span>
             </button>
           </div>
@@ -102,9 +102,9 @@ export default function LoginPage() {
         {/* Register Text */}
         <div className="text-center mt-8 md:mt-12">
           <p className="font-['Quicksand',sans-serif] text-[#4c1f03] text-[16px] md:text-[18px]">
-            tens conta? se nao{" "}
+            Don't have an account?{" "}
             <span className="font-bold underline cursor-pointer hover:text-[#f60]">
-              regista te
+              Register
             </span>
           </p>
         </div>
@@ -126,7 +126,9 @@ export default function LoginPage() {
       {/* Footer */}
       <div className="mt-auto py-8">
         <p className="font-['Inter',sans-serif] font-extralight italic text-[#4c1f03] text-[13px] md:text-[15px] text-center">
-          © 2026 MyMenu. Todos os direitos reservados. Termos de uso
+          © 2026 MyMenu. All rights reserved. <a href="/terms" className="hover:underline">
+            Terms of use
+          </a>
         </p>
       </div>
     </div>
