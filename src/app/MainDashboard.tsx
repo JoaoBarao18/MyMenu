@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import NavSup from './components/navbar/nav-sup.component';
 import NavInf from './components/navbar/nav-inf.component';
+import IconBtn from './components/icon_btn/ico_btn.component';
 
 const MainDashboard = () => {
   const navigate = useNavigate();
