@@ -32,7 +32,7 @@ const ProfileDropdown: React.FC = () => {
   };
 
   const menuItems = [
-    { label: 'Perfil', icon: User, action: () => navigate('/perfil') },
+    { label: 'Perfil', icon: User, action: () => navigate('/profile') },
     { label: 'Favoritos', icon: Heart, action: () => navigate('/favoritos') },
     { label: 'Sobre o App', icon: Info, action: () => navigate('/sobre') },
     { label: 'Sair', icon: LogOut, action: handleLogout, className: 'text-red-600' },

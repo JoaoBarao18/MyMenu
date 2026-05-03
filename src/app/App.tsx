@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
-import { supabase } from "../supabaseClient"; // Garante que o caminho está certo
+import { supabase } from "../supabaseClient";
 import MainDashboard from "./MainDashboard";
-// Teus componentes
+
+//Os componentes
 import LoginPage from "./LoginPage"; 
 import RegistarPage from "./RegisterPage";
 import JoinPage from "./JoinPage";
 import UserPreferences from "./UserPreferences";
-import ReceitasPage from './RecipesPage'; // Cria esta página
+import ReceitasPage from './RecipesPage';
+import ProfilePage from "./ProfilePage";
+import IngredientsPage from "./IngredientsPage";
 
 
 function AuthHandler() {
@@ -53,6 +56,8 @@ function App() {
           <Route path="/dashboard" element={<MainDashboard />} />
           <Route path="/UserPreferences" element={<UserPreferences />} />
           <Route path="/receitas" element={<ReceitasPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/ingredientes" element={<IngredientsPage />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
