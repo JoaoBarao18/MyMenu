@@ -32,7 +32,7 @@ function App() {
   const [isFinishedSplash, setIsFinishedSplash] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsFinishedSplash(true), 5000);
+    const timer = setTimeout(() => setIsFinishedSplash(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
