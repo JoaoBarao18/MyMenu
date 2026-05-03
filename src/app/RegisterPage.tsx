@@ -31,7 +31,7 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password || !fullName) {
+    if (!email || !password || !username) {
       toast.error("Por favor preencha todos os campos");
       return;
     }
@@ -52,6 +52,7 @@ export default function RegisterPage() {
     if (error) {
       toast.error("Erro no registo: " + error.message);
     } else {
+      toast.success("Registo realizado com sucesso!");
       console.log("Utilizador registado:", data.user);
       navigate("/UserPreferences");
     }

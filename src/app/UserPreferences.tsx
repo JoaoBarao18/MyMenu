@@ -55,7 +55,7 @@ export default function UserPreferences() {
       }
 
       const {error : profileError} = await supabase
-            .from('Profiles')
+            .from('profiles')
             .update({ full_name: formData.fullName })
             .eq('id', user.id);
 
@@ -64,12 +64,13 @@ export default function UserPreferences() {
 
       const payload = {
         id: user.id,
+        full_name: formData.fullName,
         age: parseInt(formData.age),
         weight: parseFloat(formData.weight.replace(',', '.')),
         height: parseFloat(formData.height.replace(',', '.')),
         nationality: formData.nationality,
         gender: formData.gender,
-        exercice_frequency: formData.exerciseFrequency,
+        exercise_frequency: formData.exerciseFrequency,
         allergies: formData.allergies ? formData.allergies.split(',') : []
       };
 
