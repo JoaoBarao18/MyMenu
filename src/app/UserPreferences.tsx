@@ -177,6 +177,7 @@ export default function UserPreferences() {
                 type="select"
                 value={formData.gender}
                 onChange={updateField("gender")}
+                placeholder="female"
                 options={GENDER_OPTIONS}
               />
             </div>
@@ -202,6 +203,7 @@ export default function UserPreferences() {
                 type="select"
                 value={formData.exerciseFrequency}
                 onChange={updateField("exerciseFrequency")}
+                placeholder="None,High"
                 options={EXERCISE_OPTIONS}
               />
             </div>
