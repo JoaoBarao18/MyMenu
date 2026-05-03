@@ -1,19 +1,24 @@
-// pages/DashboardPage.tsx
+//DashboardPage.tsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import MenuButton from './components/MenuButton/MenuButton';
 import ProfileDropdown from './components/ProfileDropdown';
 
-// Supomos que tens estas imagens na tua pasta de imports
-import ReceitasImg from '/images/receitas.png'; // Ajusta o caminho conforme necessário
+//Imagens
+import ReceitasImg from '/images/receitas.png';
 import IngredientesImg from '/images/ingridientes.png';
 import IdeiasImg from '/images/idea.png';
 import GeoguessImg from '/images/globo.png';
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const handleMenuClick = (menuLabel: string) => {
     // Lógica para navegação baseada no botão clicado
     console.log(`Navegar para: ${menuLabel}`);
-    // Exemplo: navigate('/receitas');
+    if (menuLabel === "Receitas") {
+      navigate("/receitas");
+    }
+    
   };
 
   return (

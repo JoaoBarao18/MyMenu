@@ -41,7 +41,7 @@ const ProfileDropdown: React.FC = () => {
   return (
     <div className="relative" ref={dropdownRef}>
       {/* Botão do Ícone de Perfil */}
-      <button
+      <button 
         onClick={() => setIsOpen(!isOpen)}
         className="size-14 rounded-full flex items-center justify-center transition-all hover:scale-105 active:scale-95"
       >

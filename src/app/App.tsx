@@ -8,6 +8,7 @@ import LoginPage from "./LoginPage";
 import RegistarPage from "./RegisterPage";
 import JoinPage from "./JoinPage";
 import UserPreferences from "./UserPreferences";
+import ReceitasPage from './RecipesPage'; // Cria esta página
 
 
 function AuthHandler() {
@@ -52,6 +53,7 @@ function App() {
           <Route path="/register" element={<RegistarPage />} />
           <Route path="/dashboard" element={<MainDashboard />} />
           <Route path="/UserPreferences" element={<UserPreferences />} />
+          <Route path="/receitas" element={<ReceitasPage />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
