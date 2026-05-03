@@ -7,6 +7,8 @@ export interface Recipe {
   id: string;
   titulo: string;
   descricao: string;
+  quantidade_numerica: number;
+  unidade: string;
   tempoEstimado: string;
   imagemUrl?: string;
   ingredientes: Ingredient[];

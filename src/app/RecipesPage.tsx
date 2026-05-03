@@ -7,8 +7,6 @@ import ProfileDropdown from './components/ProfileDropdown';
 import { supabase } from "../supabaseClient"
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-
-
 export default function RecipesPage() {
   const navigate = useNavigate();
   const [view, setView] = useState<'casa' | 'local'>('casa');
@@ -16,13 +14,12 @@ export default function RecipesPage() {
   const [userPrompt, setUserPrompt] = useState('');
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-
+  
+  // ADICIONADO: Estado para o número de pessoas
+  const [numPessoas, setNumPessoas] = useState<number>(1);
 
   const handleGenerateRecipe = async () => {
-   
     setIsLoading(true);
-
 
     try{
       const { data: {user} } = await supabase.auth.getUser(); 
@@ -33,31 +30,38 @@ export default function RecipesPage() {
 
       const {data : prefs} = await supabase
         .from("UserPreferences")
-        .select("age, weight,height,nationality,gender,exercise_frequency,allergies")
+        .select("age, weight, height, nationality, gender, exercise_frequency, allergies")
         .eq("id", user.id)
         .single();
 
+      // CORREÇÃO: Ir buscar quantidade e unidade à despensa
       const {data : pantry} = await supabase
         .from("ingredientes")
-        .select("nome")
+        .select("nome, quantidade, unidade")
         .eq("user_id", user.id);
 
-      const IngredientesDespensa = pantry?.map(ing => ing.nome).join(", ") || "Nenhum Ingrediente registado";
+      // Passar a quantidade real para o Gemini saber o que tens
+      const IngredientesDespensa = pantry?.map(ing => `${ing.nome} (${ing.quantidade || ''}${ing.unidade || ''})`).join(", ") || "Nenhum Ingrediente registado";
       const alergiasUser = prefs?.allergies || 'Nenhuma';
 
-        // 3. Regras de localização
         const regrasLocalizacao = view === 'local' 
           ? `OBRIGATÓRIO: Os pratos têm de ser tipicamente de ${prefs?.nationality || 'Portugal'}.`
           : `O país de origem é livre, escolhe pratos de qualquer parte do mundo.`;
 
-        // 4. O Prompt Mestre (PEDE 5 RECEITAS)
+        // CORREÇÃO: Prompt mais estrito sobre os Nomes e Número de Pessoas
         const promptAI = `
           Atua como um Chef de Cozinha.
           O utilizador tem ${prefs?.age || 'uma'} idade, pesa ${prefs?.weight || 'um peso normal'}kg e treina com frequência: ${prefs?.exercise_frequency || 'normal'}.
           Pedido do utilizador: "${userPrompt}"
+          Para quantas pessoas: ${numPessoas} pessoas.
           Ingredientes disponíveis na despensa: ${IngredientesDespensa}.
           Alergias a evitar: ${alergiasUser}.
           ${regrasLocalizacao}
+          
+          REGRAS ESTRITAS:
+          1. As quantidades devem ser calculadas exatamente para ${numPessoas} pessoas.
+          2. Não excedas as quantidades que o utilizador tem na despensa.
+          3. SE usares um ingrediente da despensa, o campo "nome" DEVE SER EXATAMENTE IGUAL ao nome fornecido (sem inventar palavras extra).
           
           Gera EXATAMENTE 5 receitas diferentes.
           Devolve o resultado OBRIGATORIAMENTE num formato JSON com a seguinte estrutura de array:
@@ -68,31 +72,27 @@ export default function RecipesPage() {
               "tempoEstimado": "string (ex: 15 min)",
               "paisDeOrigem": "string",
               "ingredientes": [
-                { "nome": "string","quantidade e unidade de medida": "string", "possui": boolean (true se na despensa, false se precisar comprar) }
+                { 
+                  "nome": "string",
+                  "quantidade_numerica": number (APENAS O NÚMERO, ex: 200, 1, 2.5),
+                  "unidade": "string (ex: g, ml, c. sopa, unidade)", 
+                  "possui": boolean
+                }
               ],
               "instrucoes": ["passo 1", "passo 2"]
             }
           ]
         `;
 
-        console.log("A preparar pedido para a IA...");
-
-        // =========================================================
-        // 5. AQUI ENTRA A CHAMADA À API DO GEMINI
-        // Simulação rápida de 2 segundos para veres o efeito blur
-        // =========================================================
         console.log("A enviar pedido para o Gemini...");
 
         const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-        
-        // Mudámos para o "gemini-pro" e apagámos o generationConfig
+        // Sugestão: "gemini-1.5-flash" é o nome mais estável neste momento
         const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
         const result = await model.generateContent(promptAI);
         const respostaEmTexto = result.response.text();
         
-        // Como apagámos o MimeType, o Gemini pode devolver o texto com marcação markdown.
-        // Este pequeno truque limpa os "```json" e "```" antes de fazermos o parse!
         const textoLimpo = respostaEmTexto.replace(/```json/gi, '').replace(/```/gi, '').trim();
         
         let novasReceitasRecebidas: Recipe[] = JSON.parse(textoLimpo);
@@ -102,9 +102,6 @@ export default function RecipesPage() {
           id: crypto.randomUUID()
         }));
 
-        console.log("Receitas geradas com sucesso!", novasReceitas);
-
-        // 6. Lógica do Rolling Feed (Máximo 10)
         setRecipes(prevRecipes => {
           const todasAsReceitas = [...prevRecipes, ...novasReceitas];
           if (todasAsReceitas.length > 10) {
@@ -123,7 +120,59 @@ export default function RecipesPage() {
       }
     };
 
+  const handleFinalizarEComer = async () => {
+    if (!selectedRecipe) return;
+    
+    if (!window.confirm("Já terminaste de cozinhar? Vamos descontar os ingredientes da tua despensa!")) {
+      return;
+    }
 
+    setIsLoading(true);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Utilizador não encontrado");
+
+      const { data: pantry } = await supabase
+        .from("ingredientes")
+        .select("id, nome, quantidade")
+        .eq("user_id", user.id);
+
+      if (pantry) {
+        for (const ingReceita of selectedRecipe.ingredientes) {
+          const quantidadeNumerica = Number((ingReceita as any).quantidade_numerica || 0);
+          
+          // Só desconta se POSSUI e se a quantidade é maior que 0
+          if (ingReceita.possui && quantidadeNumerica > 0) {
+            
+            // CORREÇÃO: Limpar espaços e forçar minúsculas para garantir que encontra o match
+            const nomeReceitaLimpo = ingReceita.nome.trim().toLowerCase();
+            const ingDespensa = pantry.find(
+              i => i.nome.trim().toLowerCase() === nomeReceitaLimpo
+            );
+
+            if (ingDespensa && ingDespensa.quantidade) {
+              const novaQuantidade = Math.max(0, ingDespensa.quantidade - quantidadeNumerica);
+
+              await supabase
+                .from("ingredientes")
+                .update({ quantidade: novaQuantidade })
+                .eq("id", ingDespensa.id);
+            }
+          }
+        }
+      }
+
+      alert("🎉 Bom apetite! A tua despensa foi atualizada automaticamente.");
+      setSelectedRecipe(null); 
+
+    } catch (error) {
+      console.error("Erro ao atualizar despensa:", error);
+      alert("Houve um erro ao descontar os ingredientes.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (selectedRecipe) {
     return (
@@ -133,57 +182,76 @@ export default function RecipesPage() {
         </button>
         <h1 className="text-3xl font-bold text-[#4c1f03] mb-2">{selectedRecipe.titulo}</h1>
         <p className="text-gray-600 mb-8">{selectedRecipe.descricao}</p>
+        
+        {/* Assumindo que IngredientList já consegue ler as novas variaveis */}
         <IngredientList ingredientes={selectedRecipe.ingredientes} />
+        
         <h2 className="font-bold text-[#4c1f03] mt-8 mb-4">Modo de Preparação:</h2>
         <CookingSteps passos={selectedRecipe.instrucoes} />
         
-        {/* Futuro botão de guardar receita no Supabase entrará aqui! */}
         <button className="w-full mt-8 bg-[#4c1f03] text-white font-bold py-3 rounded-full hover:bg-[#632a05] transition-colors">
           ❤️ Guardar no meu Livro de Receitas
+        </button>
+
+        <button 
+          onClick={handleFinalizarEComer}
+          disabled={isLoading}
+          className={`w-full mt-4 text-[#4c1f03] font-bold py-3 rounded-full transition-all border-2 border-[#4c1f03] ${isLoading ? 'bg-gray-300 opacity-50 cursor-not-allowed' : 'bg-[#fec356] hover:bg-[#eeb142] active:scale-95'}`}
+        >
+          {isLoading ? 'A atualizar despensa...' : '🍽️ Finalizar e Comer!'}
         </button>
       </div>
     );
   }
 
-  // --- LISTA DE RECEITAS + INPUT DE PROMPT ---
   return (
     <div className="min-h-screen bg-[#fffbed] p-6">
-      
-      {/* HEADER com a Logo adicionada */}
       <header className="flex justify-between items-center mb-8">
         <button onClick={() => navigate(-1)} className="bg-white p-3 rounded-full shadow-sm border-2 border-[#4c1f03] active:scale-90 transition-all">
           <span className="text-[#4c1f03] font-bold">← Voltar</span>
         </button>
-        
-        {/* A TUA LOGO AQUI (Assumindo que está na pasta public) */}
         <img src="/LogoMyMenu.png" alt="MyMenu Logo" className="h-10 object-contain" />
-        
         <ProfileDropdown />
       </header>
 
       <h1 className="text-2xl font-bold text-[#4c1f03] mb-6">O que vamos cozinhar?</h1>
 
-      {/* PROMPT (IA) */}
       <div className="bg-white border-4 border-[#4c1f03] rounded-[30px] p-4 shadow-md mb-8">
-        <p className="text-[#4c1f03] font-bold mb-2 text-sm ml-2">Como te sentes hoje? (Ex: Cansado, dieta low carb...)</p>
+        <p className="text-[#4c1f03] font-bold mb-2 text-sm ml-2">Como te sentes hoje?</p>
         <textarea 
-          className="w-full p-4 rounded-[20px] bg-[#fdfcf5] border-none focus:ring-2 focus:ring-[#fec356] text-gray-700 resize-none"
+          className="w-full p-4 rounded-[20px] bg-[#fdfcf5] border-none focus:ring-2 focus:ring-[#fec356] text-gray-700 resize-none mb-3"
           placeholder="Estou um pouco triste e quero algo reconfortante..."
           rows={3}
           value={userPrompt}
           onChange={(e) => setUserPrompt(e.target.value)}
           disabled={isLoading}
         />
+
+        {/* O BOTÃO QUE DEIXA O USER ESCOLHER O NÚMERO DE PESSOAS */}
+        <div className="flex items-center justify-between bg-[#fdfcf5] rounded-full p-2 px-4 mb-4">
+          <span className="text-[#4c1f03] font-bold text-sm">Para quantas pessoas?</span>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setNumPessoas(Math.max(1, numPessoas - 1))}
+              className="bg-gray-200 w-8 h-8 rounded-full font-bold text-[#4c1f03]"
+            >-</button>
+            <span className="font-bold text-[#4c1f03] w-4 text-center">{numPessoas}</span>
+            <button 
+              onClick={() => setNumPessoas(numPessoas + 1)}
+              className="bg-[#fec356] w-8 h-8 rounded-full font-bold text-[#4c1f03]"
+            >+</button>
+          </div>
+        </div>
+
         <button 
           onClick={handleGenerateRecipe}
           disabled={isLoading}
-          className={`w-full mt-3 text-white font-bold py-3 rounded-full transition-all ${isLoading ? 'bg-gray-400 cursor-not-allowed scale-95' : 'bg-[#4c1f03] hover:bg-[#632a05] active:scale-95'}`}
+          className={`w-full mt-1 text-white font-bold py-3 rounded-full transition-all ${isLoading ? 'bg-gray-400 cursor-not-allowed scale-95' : 'bg-[#4c1f03] hover:bg-[#632a05] active:scale-95'}`}
         >
           {isLoading ? 'A pensar na receita... 👨‍🍳' : '✨ Gerar Receita Personalizada'}
         </button>
       </div>
 
-      {/* SELETOR */}
       <div className="flex bg-white rounded-full p-1 border-2 border-[#4c1f03] mb-8">
         <button 
           onClick={() => setView('casa')}
@@ -199,7 +267,6 @@ export default function RecipesPage() {
         </button>
       </div>
 
-      {/* LISTAGEM (COM EFEITO DE BLUR) */}
       <div className={`space-y-6 transition-all duration-500 ease-in-out ${isLoading ? 'blur-sm opacity-50' : 'blur-none opacity-100'}`}>
         
         {recipes.length === 0 && !isLoading && (
@@ -223,9 +290,10 @@ export default function RecipesPage() {
             </div>
             <p className="text-gray-600 text-sm line-clamp-2 mb-4">{recipe.descricao}</p>
             <div className="flex flex-wrap gap-2">
-              {recipe.ingredientes.slice(0, 3).map((ing, i) => (
+              {recipe.ingredientes.slice(0, 3).map((ing: any, i) => (
                 <span key={i} className={`text-[10px] font-bold uppercase px-2 py-1 rounded-md ${ing.possui ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
-                  • {ing.nome}
+                  {/* CORREÇÃO AQUI: Mostrar as quantidades que o Gemini gerou! */}
+                  • {ing.quantidade_numerica}{ing.unidade} de {ing.nome}
                 </span>
               ))}
               {recipe.ingredientes.length > 3 && (
