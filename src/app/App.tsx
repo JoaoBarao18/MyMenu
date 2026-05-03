@@ -12,6 +12,7 @@ import UserPreferences from "./UserPreferences";
 import ReceitasPage from './RecipesPage';
 import ProfilePage from "./ProfilePage";
 import IngredientsPage from "./IngredientsPage";
+import FavoritesPage from "./FavoritesPage";
 
 
 function AuthHandler() {
@@ -58,6 +59,7 @@ function App() {
           <Route path="/receitas" element={<ReceitasPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/ingredientes" element={<IngredientsPage />} />
+          <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>
