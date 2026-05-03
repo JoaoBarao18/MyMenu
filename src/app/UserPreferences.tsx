@@ -6,17 +6,17 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { supabase } from "../../src/supabaseClient";
 
 const GENDER_OPTIONS = [
-  { value: "masculino", label: "Masculino" },
-  { value: "feminino", label: "Feminino" },
-  { value: "outro", label: "Outro" },
-  { value: "prefiro-nao-dizer", label: "Prefiro não dizer" }
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+  { value: "other", label: "Other" },
+  { value: "prefer-not-to-say", label: "Prefer not to say" }
 ];
 
 const EXERCISE_OPTIONS = [
-  { value: "nao", label: "Não pratico" },
-  { value: "ocasional", label: "Ocasionalmente (1-2x por semana)" },
-  { value: "regular", label: "Regularmente (3-4x por semana)" },
-  { value: "intensivo", label: "Intensivamente (5+ por semana)" }
+  { value: "no", label: "No exercise" },
+  { value: "ocasionally", label: "Occasionally (1-2x per week)" },
+  { value: "regular", label: "Regularly (3-4x per week)" },
+  { value: "intensive", label: "Intensively (5+ per week)" }
 ];
 
 export default function UserPreferences() {
@@ -122,7 +122,7 @@ export default function UserPreferences() {
 
             <FormField
               id="weight"
-              label="Peso (kg)"
+              label="Weight (kg)"
               type="number"
               value={formData.weight}
               onChange={updateField("weight")}
@@ -131,7 +131,7 @@ export default function UserPreferences() {
 
             <FormField
               id="height"
-              label="Altura (cm)"
+              label="Height (cm)"
               type="number"
               value={formData.height}
               onChange={updateField("height")}
