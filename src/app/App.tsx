@@ -18,7 +18,6 @@ function AuthHandler() {
     // Este "ouvinte" deteta quando o utilizador volta do Google com sucesso
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session) {
-        toast.success("Login realizado com sucesso!");
         navigate("/dashboard"); // Para onde queres que ele vá
       }
     });
