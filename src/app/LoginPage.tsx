@@ -21,7 +21,7 @@ export default function LoginPage() {
     });
 
     if (error) {
-      toast.error("Error trying to log in with Google: " + error.message);
+      toast.error("Erro ao tentar iniciar sessão com o Google: " + error.message);
     }
   };
 
@@ -29,7 +29,7 @@ export default function LoginPage() {
     e.preventDefault()
     
     if (!email || !password) {
-      toast.error("Please fill in all fields");
+      toast.error("Por favor, preencha todos os campos");
       return;
     }
 
@@ -42,10 +42,10 @@ export default function LoginPage() {
     });
 
     if (error) {
-      toast.error("Login Error: " + error.message);
+      toast.error("Erro ao iniciar sessão: " + error.message);
     } else {
-      toast.success("Login Successful!");
-      console.log("User:", data.user);
+      toast.success("Sessão iniciada com sucesso!");
+      console.log("Utilizador:", data.user);
       // Aqui podes redirecionar o utilizador se quiseres
     }
 
@@ -65,16 +65,16 @@ export default function LoginPage() {
         />
       </div>
 
-      {/* Login Card (Cresce em largura e altura no Tablet) */}
+      {/* Cartão de Login (Cresce em largura e altura no Tablet) */}
       <div className="bg-white border-5 border-[#4c1f03] border-solid w-full max-w-[368px] md:max-w-[500px] min-h-[500px] md:min-h-[620px] rounded-[27px] p-8 md:p-12 relative shadow-xl flex flex-col justify-center">
         <h1 className="font-['Quicksand',sans-serif] font-bold leading-[normal] text-[#4c1f03] text-[36px] md:text-[42px] text-center mb-8 md:mb-12">
-          Log In
+          Entrar
         </h1>
 
         {/* Formulário (Maior espaçamento vertical no Tablet) */}
         <form onSubmit={handleLogin} className="space-y-8 md:space-y-10">
           
-          {/* Email Field */}
+          {/* Campo de Email */}
           <div className="relative">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#4c1f03] size-5 md:size-6" />
             <input
@@ -86,19 +86,19 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Password Field */}
+          {/* Campo de Palavra-passe */}
           <div className="relative">
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#4c1f03] size-5 md:size-6" />
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Palavra-passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full bg-[#f6f6f6] border-2 border-[#4c1f03] rounded-full py-4 md:py-5 pl-12 md:pl-14 pr-4 font-['Quicksand',sans-serif] text-[#4c1f03] md:text-lg focus:outline-none focus:ring-2 focus:ring-[#f60]"
             />
           </div>
 
-          {/* Iniciar Button (Mais alto e largo no Tablet) */}
+          {/* Botão de Iniciar (Mais alto e largo no Tablet) */}
           <div className="flex justify-center">
             <button 
               type="submit"
@@ -110,24 +110,24 @@ export default function LoginPage() {
             >
               <span className="font-['Gruppo',sans-serif] leading-[normal] text-[32px] text-white">
                 {/* 2. Muda o texto conforme o estado */}
-                {isLoading ? "Joining..." : "Log In"}
+                {isLoading ? "A entrar..." : "Entrar"}
               </span>
             </button>
           </div>
         </form>
 
-        {/* Register Text */}
+        {/* Texto de Registo */}
         <div className="text-center mt-8 md:mt-12">
           <p className="font-['Quicksand',sans-serif] text-[#4c1f03] text-[16px] md:text-[18px]">
-            Don't have an account?{" "}
+            Não tem uma conta?{" "}
             <Link 
               to="/register" className="font-bold underline cursor-pointer hover:text-[#f60] transition-colors">
-              Register
+              Registe-se
             </Link>
           </p>
         </div>
 
-        {/* Social Icons */}
+        {/* Ícones Sociais */}
         <div className="flex justify-center gap-4 md:gap-8 mt-6 md:mt-8">
           <button type="button" onClick={handleGoogleLogin} className="size-12 md:size-14 rounded-full border-2 border-[#4c1f03] flex items-center justify-center hover:bg-gray-50 transition-colors cursor-pointer">
             <svg className="size-6 md:size-7" viewBox="0 0 24 24">
@@ -141,11 +141,11 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Footer */}
+      {/* Rodapé */}
       <div className="mt-auto py-8">
         <p className="font-['Inter',sans-serif] font-extralight italic text-[#4c1f03] text-[13px] md:text-[15px] text-center">
-          © 2026 MyMenu. All rights reserved. <a href="/terms" className="hover:underline">
-            Terms of use
+          © 2026 MyMenu. Todos os direitos reservados. <a href="/terms" className="hover:underline">
+            Termos de utilização
           </a>
         </p>
       </div>
