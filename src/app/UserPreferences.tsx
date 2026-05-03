@@ -22,6 +22,7 @@ const EXERCISE_OPTIONS = [
 export default function UserPreferences() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -47,18 +48,29 @@ export default function UserPreferences() {
     setIsLoading(true);
 
     try {
-      // 2. Preparamos o objeto JSON com os tipos de dados corretos (números)
-      // O 'id' não precisa ir aqui porque o Supabase vai usar o auth.uid() automaticamente
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error("Utilizador não autenticado");
+      }
+
+      const {error : profileError} = await supabase
+            .from('Profiles')
+            .update({ full_name: formData.fullName })
+            .eq('id', user.id);
+
+      if(profileError) throw profileError;
+
+
       const payload = {
-        full_name: formData.fullName,
+        id: user.id,
         age: parseInt(formData.age),
-        weight: parseFloat(formData.weight.replace(',', '.')), // Garante que aceita vírgula ou ponto
+        weight: parseFloat(formData.weight.replace(',', '.')),
         height: parseFloat(formData.height.replace(',', '.')),
         nationality: formData.nationality,
         gender: formData.gender,
-        exercise_frequency: formData.exerciseFrequency,
-        allergies: formData.allergies || null,
-        updated_at: new Date().toISOString()
+        exercice_frequency: formData.exerciseFrequency,
+        allergies: formData.allergies ? formData.allergies.split(',') : []
       };
 
       // 3. Envio para a base de dados
@@ -69,14 +81,6 @@ export default function UserPreferences() {
         .single();
 
       if (error) throw error;
-
-      // 4. Aqui está o seu JSON para uso posterior com a IA
-      console.log("JSON pronto para a IA:", data);
-      
-      // Opcional: Guardar este JSON no estado global ou localStorage para a IA ler depois
-      localStorage.setItem('user_preferences_ai', JSON.stringify(data));
-
-      // Redireciona para o dashboard inicial
       navigate("/dashboard");
 
     } catch (error: any) {

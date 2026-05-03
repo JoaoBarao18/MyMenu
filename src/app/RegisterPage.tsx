@@ -6,6 +6,7 @@ import LogoMyMenu from "../imports/IPhone171/LogoMyMenu.png";
 import { supabase } from "../supabaseClient";
 
 export default function RegisterPage() {
+  const [username, setUsername]  = useState(""); 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,9 +43,8 @@ export default function RegisterPage() {
       email: email,
       password: password,
       options: {
-        // Estes dados vão para o 'auth.users' e podem ser usados para a tua tabela 'Users'
         data: {
-          full_name: fullName,
+          username,
         },
       },
     });
@@ -52,12 +52,9 @@ export default function RegisterPage() {
     if (error) {
       toast.error("Erro no registo: " + error.message);
     } else {
-      toast.success("Registo feito! Verifica o teu email para confirmar.");
       console.log("Utilizador registado:", data.user);
-
       navigate("/UserPreferences");
     }
-
     setIsLoading(false);
   };
 
@@ -86,9 +83,9 @@ export default function RegisterPage() {
             <User className="absolute left-4 top-1/2 -translate-y-1/2 text-[#4c1f03] size-5 md:size-6" />
             <input
               type="text"
-              placeholder="Nome Completo"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full bg-[#f6f6f6] border-2 border-[#4c1f03] rounded-full py-3 md:py-4 pl-12 md:pl-14 pr-4 font-['Quicksand',sans-serif] text-[#4c1f03] focus:outline-none focus:ring-2 focus:ring-[#f60]"
             />
           </div>
