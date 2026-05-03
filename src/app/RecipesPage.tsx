@@ -6,6 +6,7 @@ import { CookingSteps } from './components/CookingSteps';
 import ProfileDropdown from './components/ProfileDropdown';
 import { supabase } from "../supabaseClient"
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import LogoMyMenu from "../imports/IPhone171/LogoMyMenu.png";
 
 export default function RecipesPage() {
   const navigate = useNavigate();
@@ -210,7 +211,14 @@ export default function RecipesPage() {
         <button onClick={() => navigate(-1)} className="bg-white p-3 rounded-full shadow-sm border-2 border-[#4c1f03] active:scale-90 transition-all">
           <span className="text-[#4c1f03] font-bold">← Voltar</span>
         </button>
-        <img src="/LogoMyMenu.png" alt="MyMenu Logo" className="h-10 object-contain" />
+           {/* Imagem */}
+        <div className="w-full flex items-center justify-center mb-6 md:mb-10">
+          <img 
+            src={LogoMyMenu} // (Ou o caminho que usaste)
+            alt="Logótipo MyMenu" 
+            className="w-[200px] md:w-[260px] h-auto object-contain transition-all" 
+          />
+        </div>
         <ProfileDropdown />
       </header>
 
