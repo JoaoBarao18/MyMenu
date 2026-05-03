@@ -34,15 +34,6 @@ export const CookingSteps = ({ passos }: { passos: string[] }) => {
           </div>
         );
       })}
-
-      {currentStep === passos.length && (
-        <button 
-          onClick={() => window.location.reload()} 
-          className="w-full py-4 bg-[#f60] text-white rounded-full font-bold shadow-xl animate-bounce"
-        >
-          Finalizar e Comer! 🍽️
-        </button>
-      )}
     </div>
   );
 };

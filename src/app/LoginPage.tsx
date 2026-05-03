@@ -68,7 +68,11 @@ export default function LoginPage() {
       {/* Cartão de Login (Cresce em largura e altura no Tablet) */}
       <div className="bg-white border-5 border-[#4c1f03] border-solid w-full max-w-[368px] md:max-w-[500px] min-h-[500px] md:min-h-[620px] rounded-[27px] p-8 md:p-12 relative shadow-xl flex flex-col justify-center">
         <h1 className="font-['Quicksand',sans-serif] font-bold leading-[normal] text-[#4c1f03] text-[36px] md:text-[42px] text-center mb-8 md:mb-12">
+<<<<<<< HEAD
           Entrar
+=======
+          Login
+>>>>>>> 15cd1935f2d19535e30c1bae9864b92ce2f47a04
         </h1>
 
         {/* Formulário (Maior espaçamento vertical no Tablet) */}
@@ -110,7 +114,11 @@ export default function LoginPage() {
             >
               <span className="font-['Gruppo',sans-serif] leading-[normal] text-[32px] text-white">
                 {/* 2. Muda o texto conforme o estado */}
+<<<<<<< HEAD
                 {isLoading ? "A entrar..." : "Entrar"}
+=======
+                {isLoading ? "A Entrar" : "Iniciar"}
+>>>>>>> 15cd1935f2d19535e30c1bae9864b92ce2f47a04
               </span>
             </button>
           </div>
@@ -119,10 +127,17 @@ export default function LoginPage() {
         {/* Texto de Registo */}
         <div className="text-center mt-8 md:mt-12">
           <p className="font-['Quicksand',sans-serif] text-[#4c1f03] text-[16px] md:text-[18px]">
+<<<<<<< HEAD
             Não tem uma conta?{" "}
             <Link 
               to="/register" className="font-bold underline cursor-pointer hover:text-[#f60] transition-colors">
               Registe-se
+=======
+            Nao tens uma conta?{" "}
+            <Link 
+              to="/register" className="font-bold underline cursor-pointer hover:text-[#f60] transition-colors">
+              Criar conta
+>>>>>>> 15cd1935f2d19535e30c1bae9864b92ce2f47a04
             </Link>
           </p>
         </div>
